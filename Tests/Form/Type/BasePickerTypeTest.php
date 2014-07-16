@@ -30,6 +30,19 @@ class BasePickerTest extends BasePickerType
     }
 }
 
+class BasePickerFrenchTest extends BasePickerType
+{
+    public function getName()
+    {
+        return 'base_picker_french_test';
+    }
+
+    protected function getDefaultFormat()
+    {
+        return 'd/m/Y H:i:s';
+    }
+}
+
 
 /**
  * Class BasePickerTypeTest
@@ -43,6 +56,36 @@ class BasePickerTypeTest extends \PHPUnit_Framework_TestCase
     public function testFinishView()
     {
         $type = new BasePickerTest(new MomentFormatConverter());
+
+        $view = new FormView();
+        $form = new Form($this->getMock('Symfony\Component\Form\FormConfigInterface'));
+
+        $type->finishView($view, $form, array());
+
+        $this->assertArrayHasKey('moment_format', $view->vars);
+        $this->assertArrayHasKey('dp_options', $view->vars);
+
+        foreach ($view->vars['dp_options'] as $dpKey => $dpValue) {
+            $this->assertFalse(strpos($dpKey, "_"));
+            $this->assertFalse(strpos($dpKey, "dp_"));
+        }
+
+        $this->assertEquals('text', $view->vars['type']);
+    }
+}
+
+/**
+ * Class BasePickerFrenchTypeTest
+ *
+ * @package Sonata\CoreBundle\Tests\Form\Type
+ *
+ * @author Antoine Rouault de Coligny <antoine@rouaultdecoligny.fr>
+ */
+class BasePickerFrenchTypeTest extends \PHPUnit_Framework_TestCase
+{
+    public function testFinishView()
+    {
+        $type = new BasePickerFrenchTest(new MomentFormatConverter());
 
         $view = new FormView();
         $form = new Form($this->getMock('Symfony\Component\Form\FormConfigInterface'));
